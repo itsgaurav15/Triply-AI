@@ -12,6 +12,7 @@ from backend import run_travel_agent, resume_travel_agent
 
 # This is kept from the original project to allow the existing synchronous
 # agent functions to call async MCP helpers inside FastAPI.
+
 import nest_asyncio
 
 nest_asyncio.apply()

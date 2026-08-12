@@ -12,7 +12,7 @@ Contents
 - `app.py`: FastAPI web frontend and API endpoints
 - `backend.py`: core agent orchestration / travel-planner logic
 - `mcp_client.py`: client helpers to interact with the MCP server
-- `custom_weather_mcp_server.py`: example MCP server for weather checks
+- `mcp_server.py`: example MCP server for weather checks
 - `templates/`, `static/`: frontend UI assets (HTML, JS, CSS)
 
 Features
@@ -55,11 +55,11 @@ uvicorn app:app --reload --host 127.0.0.1 --port 8000
 Visit http://127.0.0.1:8000 in your browser to use the TripMate frontend.
 
 Running the MCP server (example)
-- The repository includes `custom_weather_mcp_server.py` as an example MCP server. Run it in a separate terminal if you want to experiment with custom adapters used by the demo.
+- The repository includes `mcp_server.py` as an example MCP server. Run it in a separate terminal if you want to experiment with custom adapters used by the demo.
 
 ```powershell
 # start example MCP server (if needed)
-python custom_weather_mcp_server.py
+python mcp_server.py
 ```
 
 API Endpoints
