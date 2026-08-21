@@ -8,6 +8,7 @@ import certifi
 from dotenv import load_dotenv
 from langchain_groq import ChatGroq
 from langchain_mcp_adapters.client import MultiServerMCPClient
+from langsmith import traceable
 
 
 # =========================================================
@@ -231,7 +232,7 @@ async def get_all_tools() -> None:
 # =========================================================
 # Tavily MCP
 # =========================================================
-
+@traceable(name="tavily_hotel_search")
 async def tavily_mcp_search(query: str):
     search_tool = await _get_server_tool(
         "tavily",
@@ -248,7 +249,7 @@ async def tavily_mcp_search(query: str):
 # =========================================================
 # AviationStack MCP
 # =========================================================
-
+@traceable(name="aviation_mcp_call")
 async def aviation_mcp_call(
     tool_name: str,
     tool_args: dict[str, Any] | None = None,
@@ -266,7 +267,7 @@ async def aviation_mcp_call(
 # =========================================================
 # Weather MCP
 # =========================================================
-
+@traceable(name="weather_mcp_search")
 async def weather_mcp_search(city: str):
     weather_tool = await _get_server_tool(
         "weather",
@@ -279,7 +280,7 @@ async def weather_mcp_search(city: str):
         }
     )
 
-
+@traceable(name="forecast_mcp_search")
 async def forecast_mcp_search(city: str):
     forecast_tool = await _get_server_tool(
         "weather",

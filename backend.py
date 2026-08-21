@@ -5,6 +5,8 @@ from dotenv import load_dotenv
 load_dotenv()
 os.environ["SSL_CERT_FILE"] = certifi.where()
 os.environ["REQUESTS_CA_BUNDLE"] = certifi.where()
+os.environ["LANGCHAIN_TRACING"] = "true"
+os.environ["LANGCHAIN_PROJECT"] = "Triply-AI"
 
 from typing import Any, TypedDict, Annotated
 import operator
@@ -185,12 +187,12 @@ User request:
         llm_calls += 1
     except Exception as exc:
         print(f"Guardrail fallback used: {exc}")
-        allowed = True
+        allowed = True 
         guardrail_reason = "Guardrail validation fallback allowed the request."
 
     if not allowed:
         reason = guardrail_reason or (
-            "TripMate AI can only help with travel-planning requests. "
+            "Triply AI can only help with travel-planning requests. "
             "Please ask about a destination, flight, hotel, weather, budget, "
             "or itinerary."
         )
@@ -204,7 +206,7 @@ User request:
             "messages": [AIMessage(content=f"Guardrail blocked request: {reason}")],
             "llm_calls": llm_calls,
         }
-
+    
     supervisor_prompt = f"""
 You are the supervisor of a multi-agent travel-planning system.
 Choose only the specialist agents needed for the request.
@@ -792,7 +794,12 @@ def run_travel_agent(user_input: str, thread_id: str | None = None):
     if not thread_id:
         thread_id = f"user_{uuid.uuid4().hex}"
 
-    config = {"configurable": {"thread_id": thread_id}}
+    config = {
+          "configurable": {"thread_id": thread_id},
+          "run_name": "travel_planning_run",
+          "tags": ["triply", "initial_run"],
+          "metadata": {"thread_id": thread_id},
+      }
 
     result = travel_graph.invoke(
         {
@@ -829,7 +836,13 @@ def resume_travel_agent(
     if not thread_id:
         raise ValueError("thread_id is required to resume a travel plan.")
 
-    config = {"configurable": {"thread_id": thread_id}}
+    config = {
+          "configurable": {"thread_id": thread_id},
+          "run_name": "travel_planning_resume",
+          "tags": ["triply", "resume_run"],
+          "metadata": {"thread_id": thread_id},
+      }
+     
     result = travel_graph.invoke(
         Command(
             resume={
